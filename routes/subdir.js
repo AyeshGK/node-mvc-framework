@@ -13,6 +13,6 @@ router.get('/test', (req, res) => {
     res.sendFile(path.join(__dirname,'..','views','subdir','test.html'));
 })
 
-// sdfsd
+
 
 module.exports = router;
