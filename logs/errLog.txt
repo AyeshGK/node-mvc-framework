@@ -1,3 +1,3 @@
-20211223	14:33:47	1e258c1c-aefa-43e4-aff6-ce20ed5495d6	Error	NOT ALLOWED BY CORS
-20211223	19:30:25	e4370ff8-e30a-4915-894f-a6910a329345	TypeError	Cannot read property 'get' of undefined
-20211223	19:38:37	d311882d-677f-42c2-9f58-6c9074446258	TypeError	Cannot read property 'get' of undefined
+20220117	21:15:30	1014916c-0ea7-4cff-a35e-8f423ffeb804	TypeError	Cannot read properties of undefined (reading 'username')
+20220117	21:24:14	104a1af9-5ffc-4044-ae54-4391a2908518	ReferenceError	username is not defined
+20220117	23:44:37	587eb1ed-fd4f-4bc0-add7-395b53dd4bf8	TypeError	authHeader?.startWith is not a function
