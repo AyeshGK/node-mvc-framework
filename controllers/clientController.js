@@ -1,93 +1,167 @@
-const data = {
-    clients :require('../models/clients.json'),
-    setClients:(clients)=>this.clients=clients,
-};
+// const data = {
+//     clients :require('../models/clients.json'),
+//     setClients:(clients)=>this.clients=clients,
+// };
 
-const getAllClients = (req,res)=>{
-    res.json(data.clients);
-}
+const Client = require('../models/Client');
 
-const createNewClient =(req,res)=>{
-    const id = req.body.id;
-    const name = req.body.name;
+// Client = require('../models/clients.json');
 
-    if(!id || !name){
-        return res.status(400).json({
-            status:400,
-            message:"input data invalid",
-        })
-    }
+const getAllClients = async (req, res) => {
+    // Client.find({},(err,clients)=>{
+    //     if(err) return res.status(500).json({"message":"Internal Server Error"})
+    //     res.json(clients);
+    // })
 
-    const newClient ={
-        id:id,
-        name:name
-    }
-    
-    data.setClients([...data.clients,newClient])
-    
-    res.status(201).json({
-        message:"success",
-        data:data.clients
+    const clients = await Client.find();
+    if (!clients) return res.status(204).json({ 'message': 'No employees found.' })
+
+    res.status(200).json({
+        message: "success",
+        data: clients
     });
 }
 
-const updateClients = (req,res)=>{
-    const id = req.body.id; 
-    if(!id){
+const createNewClient = async (req, res) => {
+
+    console.log(req.body);
+    if (!req?.body?.firstname || !req?.body?.lastname) {
         return res.status(400).json({
-            messgage:"invalid inputs"
+            message: "input data invalid",
         })
     }
 
-    let found = false;
-    
-    const updatedClients = data.clients.map(client=>{
-        if(client.id===id){
-            found = true;
-            return {
-                id:client.id,
-                name:req.body.name
-            }
+
+
+    // const newClient ={
+    //     id:id,
+    //     name:name
+    // }
+
+    // data.setClients([...data.clients,newClient])
+    try {
+
+        const duplicate = await Client.findOne({ _id: req.body.id }).exec();
+
+        if (duplicate) {
+            return res.status(409).json({
+                'message': 'id already exits'
+            })
         }
-        return client;
-    })
 
-    if(!found){
-        return res.status(400).json({
-            status:400,
-            message:"client not exits"
+        const newClient = await Client.create({
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+
+        })
+        console.log(newClient);
+        return res.status(201).json({ 'message': `new client ${newClient.firstname + ' ' + newClient.lastname} created ...!` })
+    } catch (err) {
+        return res.status(500).json({
+            status: 500,
+            message: err.message,
         })
     }
 
-    data.setClients(updatedClients);
-
-    res.status(200).json({
-        message:"success",
-        data:updatedClients
-    })
+    // res.status(201).json({
+    //     message:"success",
+    //     data:data.clients
+    // });
 }
 
-const deleteClient = (req,res)=>{
-    const client = data.clients.find(client =>client.id === req.body.id);
+const updateClients = async (req, res) => {
 
-    if(!client){
+    console.log(req.body)
+
+    if (!req?.body?.id) {
         return res.status(400).json({
-            message:"client not exits"
+            messgage: "id required"
         })
     }
-    
-    const filtered = data.clients.filter(client =>client.id !== req.body.id)
-    data.setClients(filtered)
+
+
+
+    // let found = false;
+
+    // const updatedClients = data.clients.map(client=>{
+    //     if(client.id===id){
+    //         found = true;
+    //         return {
+    //             id:client.id,
+    //             name:req.body.name
+    //         }
+    //     }
+    //     return client;
+    // })
+
+
+
+    try {
+        const client = await Client.findOne({ _id: req.body.id }).exec();
+        console.log(client);
+        if (!client) {
+            return res.status(204).json({
+                message: "client not exits"
+            })
+        }
+
+        if (req.body?.firstname) client.firstname = req.body.firstname;
+        if (req.body?.lastname) client.lastname = req.body.lastname;
+
+        console.log("updated", client);
+
+        const result = await client.save();
+
+        return res.status(200).json({
+            data: result,
+            message: "successfully updated"
+        })
+    } catch (err) {
+        res.status(500).json({ 'message': err.message })
+    }
+
+    // data.setClients(updatedClients);
+
+    // res.status(200).json({
+    //     message:"success",
+    //     data:updatedClients
+    // })
+}
+
+const deleteClient = async (req, res) => {
+    // const client = data.clients.find(client =>client.id === req.body.id);
+    if (!req?.body?.id) return res.status(400).json({ 'message': 'id is required' });
+
+    const client = await Client.findOne({ _id: req.body.id }).exec();
+
+    if (!client) {
+        return res.status(204).json({
+            message: "client not exits"
+        })
+    }
+
+    // const filtered = data.clients.filter(client =>client.id !== req.body.id)
+    // data.setClients(filtered)
+
+    // await Client.deleteOne();
+    const result = await client.deleteOne({ _id: req.body.id });
+    console.log(result);
 
     res.status(200).json({
-        messgage:"successfully deleted",
-        data:client
+        messgage: "successfully deleted",
+        data: result
     })
 }
 
-const getAClient = (req,res)=>{
+const getAClient = async (req, res) => {
+    if (!req?.params?.id) return res.status(400).json({ 'message': 'id is required' });
+
+    const client = await Client.findOne({ _id: req.params.id }).exec();
+
+    if (!client) return res.status(204).json({ 'message': `client not exits with id {${req.params.id}}` });
+
     res.json({
-        "id":req.params.id
+        data: client
     })
 }
 
