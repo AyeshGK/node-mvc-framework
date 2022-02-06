@@ -1,14 +1,14 @@
 NODE MVC fremework project
 
-#🔥 🔥 🔥
-#NOTORIOUS CODING 👽
+# 🔥 🔥 🔥
+# NOTORIOUS CODING 👽
 
-#AUTHOR : Ayesh Vininda
-#EMAIL : ayeshgk@gmail.com
-#ORGANIZATION : CyberSync.INC : cybersynced4@gmail.com
-#CREATED_AT:2021-12-23
-#LAST_UPDATED_AT:2022-02-06
-#🔥 🔥 🔥
+# AUTHOR : Ayesh Vininda
+# EMAIL : ayeshgk@gmail.com
+# ORGANIZATION : CyberSync.INC : cybersynced4@gmail.com
+# CREATED_AT:2021-12-23
+# LAST_UPDATED_AT:2022-02-06
+# 🔥 🔥 🔥
 
 ##simple node used
 ##express.js used
